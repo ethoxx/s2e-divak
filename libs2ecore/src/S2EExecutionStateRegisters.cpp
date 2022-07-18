@@ -350,6 +350,19 @@ bool S2EExecutionStateRegisters::getRegionType(unsigned offset, unsigned size, b
     }
 }
 
+bool S2EExecutionStateRegisters::getRegType(unsigned offset, unsigned size, bool *isConcrete) {
+    bool _isConcrete;
+    if (!getRegionType(offset, size, &_isConcrete)) {
+        return false;
+    } else if (_isConcrete || m_symbolicRegs->isAllConcrete() || m_symbolicRegs->isConcrete(offset, size * 8)) {
+        *isConcrete = true;
+        return true;
+    } else {
+        *isConcrete = false;
+        return true;
+    }
+}
+
 /**
  * The architectural part of the concrete portion of CPUState contains the COMMON stuff.
  * We skip this stuff in the comparison.

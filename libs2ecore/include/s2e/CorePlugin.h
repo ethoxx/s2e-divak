@@ -110,6 +110,19 @@ public:
         onTranslateBlockComplete;
 
     ///
+    /// Emitted right after onTranslateInstructionStart. Its only purpose is to allow subscribers to force the 
+    /// translator to ensure that the program counter is consistent after this instruction executed, s.t. on 
+    /// onConcreteDataMemoryAccess events, the instruction from which it originates can be determined.
+    /// ATTENTION: Will only fire if there is at least one subscriber to onTranslateInstructionStart
+    ///
+    sigc::signal<void,
+                 S2EExecutionState*,
+                 TranslationBlock*,
+                 uint64_t /* instruction PC */,
+                 bool* /* force updating of PC*/>
+         onTranslateInstructionStartSecondary;
+
+    ///
     /// Signals that are emitted on code generation for each instruction.
     ///
     sigc::signal<void,

@@ -192,6 +192,7 @@ void s2e_on_translate_instruction_start(void *context, TranslationBlock *tb, uin
     S2ETranslationBlock *se_tb = static_cast<S2ETranslationBlock *>(tb->se_tb);
     ExecutionSignal *signal = static_cast<ExecutionSignal *>(se_tb->executionSignals.back());
     assert(signal->empty());
+    bool forcePcUpdate = false;
 
     try {
         g_s2e->getCorePlugin()->onTranslateInstructionStart.emit(signal, g_s2e_state, tb, pc);
@@ -199,6 +200,10 @@ void s2e_on_translate_instruction_start(void *context, TranslationBlock *tb, uin
             s2e_gen_pc_update(context, pc, tb->cs_base);
             s2e_tcg_instrument_code(signal, pc - tb->cs_base);
             se_tb->executionSignals.push_back(new ExecutionSignal);
+        }
+        g_s2e->getCorePlugin()->onTranslateInstructionStartSecondary.emit(g_s2e_state, tb, pc, &forcePcUpdate);
+        if (signal->empty() && forcePcUpdate) {
+            s2e_gen_pc_update(context, pc, tb->cs_base);
         }
     } catch (s2e::CpuExitException &) {
         longjmp(env->jmp_env, 1);

@@ -330,6 +330,9 @@ public:
     /// \param pc the new value of the program counter
     ///
     void setPc(uint64_t pc);
+
+    /// Check if a register is currently concrete or symbolic.
+    bool getRegType(unsigned offset, unsigned size, bool *isConcrete);
 };
 } // namespace s2e
 

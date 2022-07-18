@@ -23,6 +23,13 @@ PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS ${CMAKE_CURRENT_SOURCE_DIR}/s2e/Plug
 add_library(
     s2eplugins
 
+    # Custom plugins
+    s2e/Plugins/MemoryTracker.cpp
+    s2e/Plugins/OOBTracker.cpp
+    s2e/Plugins/util.cpp
+    s2e/Plugins/containers.cpp
+    s2e/Plugins/OOBAnalyzer.cpp
+
     # Core plugins
     s2e/Plugins/Core/BaseInstructions.cpp
     s2e/Plugins/Core/HostFiles.cpp
